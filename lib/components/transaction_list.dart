@@ -3,24 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
-
   final List<Transaction> transactions;
   final void Function(String) onRemove;
-
 
   TransactionList(this.transactions, this.onRemove);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: 430,
-          child: transactions.isEmpty  
-          ? Column(
-          children: <Widget>[
-            SizedBox(height: 20),
+    return transactions.isEmpty
+        ? Column(
+            children: <Widget>[
+              SizedBox(height: 20),
               Text(
                 "Nenhuma transação cadastrada!!!",
-                style: Theme.of(context).textTheme.title,
+                style: Theme.of(context).textTheme.headline6,
               ),
               SizedBox(height: 20),
               Container(
@@ -31,11 +27,11 @@ class TransactionList extends StatelessWidget {
                 ),
               ),
             ],
-          ) 
-          : ListView.builder(//Aqui colocamos o builder para caso a lista seja muito grande ele nãio carrega tudo de uma vez, poupando memória do celular e deixando uma experiência melhor para o usuário 
+          )
+        : ListView.builder(
+            //Aqui colocamos o builder para caso a lista seja muito grande ele nãio carrega tudo de uma vez, poupando memória do celular e deixando uma experiência melhor para o usuário
             itemCount: transactions.length,
-            itemBuilder: (ctx, index){
-
+            itemBuilder: (ctx, index) {
               final tr = transactions[index];
 
               return Card(
@@ -44,19 +40,17 @@ class TransactionList extends StatelessWidget {
                   vertical: 8,
                   horizontal: 5,
                 ),
-                  child: ListTile(
+                child: ListTile(
                   leading: CircleAvatar(
                     radius: 30,
                     child: Padding(
                       padding: const EdgeInsets.all(6),
-                      child: FittedBox(
-                        child: Text("R\$${tr.value}")
-                      ),
+                      child: FittedBox(child: Text("R\$${tr.value}")),
                     ),
                   ),
                   title: Text(
                     tr.title,
-                    style: Theme.of(context).textTheme.title,
+                    style: Theme.of(context).textTheme.headline6,
                   ),
                   subtitle: Text(
                     DateFormat("d MMM y").format(tr.date),
@@ -69,7 +63,6 @@ class TransactionList extends StatelessWidget {
                 ),
               );
             },
-          ),
-    );
+          );
   }
 }

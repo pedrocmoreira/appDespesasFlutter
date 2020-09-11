@@ -1,19 +1,20 @@
 import 'package:expenses/components/chart.dart';
 import 'package:expenses/components/transaction_form.dart';
 import 'package:flutter/material.dart';
+//import 'package:flutter/services.dart';
 
 import 'dart:math';
 import 'components/transaction_form.dart';
 import 'components/transaction_list.dart';
 import 'models/transaction.dart';
 
-
-
 main() => runApp(ExpenseApp());
 
 class ExpenseApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
     return MaterialApp(
       home: MyHomePage(),
       theme: ThemeData(
@@ -21,40 +22,37 @@ class ExpenseApp extends StatelessWidget {
         accentColor: Colors.amber,
         fontFamily: "Quicksand",
         textTheme: ThemeData.light().textTheme.copyWith(
-          title: TextStyle(
-            fontFamily: "OpenSans",
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-          button: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+              headline6: TextStyle(
+                fontFamily: "OpenSans",
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              button: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-        ),
         appBarTheme: AppBarTheme(
           textTheme: ThemeData.light().textTheme.copyWith(
-            title: TextStyle(
-              fontFamily: "OpenSans",
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),  
-          ),
+                headline6: TextStyle(
+                  fontFamily: "OpenSans",
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
         ),
       ),
     );
   }
 }
 
-
-class MyHomePage  extends StatefulWidget {
-
+class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-final List<Transaction> _transactions = [];
+  final List<Transaction> _transactions = [];
 
   List<Transaction> get _recentTrasactions {
     return _transactions.where((tr) {
@@ -64,7 +62,7 @@ final List<Transaction> _transactions = [];
     }).toList();
   }
 
-    _addTransaction(String title, double value, DateTime date) {
+  _addTransaction(String title, double value, DateTime date) {
     final newTransaction = Transaction(
       id: Random().nextDouble().toString(),
       title: title,
@@ -79,7 +77,7 @@ final List<Transaction> _transactions = [];
     Navigator.of(context).pop();
   }
 
-  _removeTransaction(String id){
+  _removeTransaction(String id) {
     setState(() {
       _transactions.removeWhere((tr) {
         return tr.id == id;
@@ -87,33 +85,43 @@ final List<Transaction> _transactions = [];
     });
   }
 
-  _openTransactionFormModal (BuildContext context) {
+  _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
-      context: context,
-      builder: (_) {
-        return TransactionForm(_addTransaction);
-      }
-    );
+        context: context,
+        builder: (_) {
+          return TransactionForm(_addTransaction);
+        });
   }
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      title: Text("Despesas Pessoais"),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () => _openTransactionFormModal(context),
+        )
+      ],
+    );
+    final avaiableHeight = MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Despesas Pessoais"),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => _openTransactionFormModal(context),
-          )
-        ],
-      ),
+      appBar: appBar,
       body: SingleChildScrollView(
-          child: Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Chart(_recentTrasactions),
-            TransactionList(_transactions, _removeTransaction),
+            Container(
+              height: avaiableHeight * 0.30,
+              child: Chart(_recentTrasactions),
+            ),
+            Container(
+              height: avaiableHeight * 0.70,
+              child: TransactionList(_transactions, _removeTransaction),
+            ),
           ],
         ),
       ),
