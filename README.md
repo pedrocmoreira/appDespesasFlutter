@@ -1,6 +1,6 @@
 # Personal Expenses
 
-:moneybag: An aplication aimed at controlling personal expenses. 
+:moneybag: An aplication aimed at controlling your personal expenses. 
 This project was made to study this structure and how it works.
 
 ## Getting Started
